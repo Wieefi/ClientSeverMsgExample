@@ -43,6 +43,40 @@ public class MainController implements Initializable {
     @FXML
     private Button clearBtn;
 
+    @FXML
+    private Button user1_client;
+    @FXML
+    private Button user2_server;
+
+    @FXML
+    void launchClientView(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/clientsevermsgexample/client-view.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("User 1 - Client");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void launchServerView(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/clientsevermsgexample/server-view.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("User 2 - Server");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
     @FXML
@@ -127,7 +161,7 @@ public class MainController implements Initializable {
 
             ServerSocket serverSocket = new ServerSocket(6666);
             updateServer("Server is running and waiting for a client...");
-            while (true) { // Infinite loop
+            while (true) {
                 try {
                     Socket clientSocket = serverSocket.accept();
                     updateServer("Client connected!");
@@ -139,13 +173,12 @@ public class MainController implements Initializable {
                             throw new RuntimeException(e);
                         }
                     });
-                    DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
-                    DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
+                    DataInputStream dis =new DataInputStream(clientSocket.getInputStream());
+                    DataOutputStream dos= new DataOutputStream(clientSocket.getOutputStream());
 
-                    message = dis.readUTF();
+                    message =dis.readUTF();
                     updateServer("Message from client: " + message);
 
-                    // Sending a response back to the client
                     dos.writeUTF("Received: " + message);
 
                     dis.close();
@@ -165,7 +198,6 @@ public class MainController implements Initializable {
     }
 
     private void updateServer(String message) {
-        // Run on the UI thread
         javafx.application.Platform.runLater(() -> lb12.setText(message + "\n"));
     }
 
@@ -178,7 +210,7 @@ public class MainController implements Initializable {
         connectButton.setLayoutX(100);
         connectButton.setLayoutY(300);
         connectButton.setOnAction(this::connectToServer);
-        // new Thread(this::connectToServer).start();
+        //new Thread(this::connectToServer).start();
 
         Label lb11 = new Label("Client");
         lb11.setLayoutX(100);
